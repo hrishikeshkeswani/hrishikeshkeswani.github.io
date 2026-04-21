@@ -9,10 +9,6 @@
 </head>
 <body>
 
-<!-- CURSOR -->
-<div id="cursor"></div>
-<div id="cursor-ring"></div>
-
 <div class="page-layout">
 
   <!-- LEFT SOCIAL BAR -->
@@ -40,18 +36,18 @@
   <div class="content">
 
     <!-- NAVBAR -->
-    <header class="nav" id="nav">
+    <header class="nav">
       <div class="container nav-inner">
-        <a href="#home" class="logo"><span>//</span> hrishikesh.py</a>
+        <a href="#home" class="logo">hrishikesh.py</a>
         <nav>
           <a href="#about">About</a>
-          <span class="nav-sep">·</span>
+          <span class="nav-sep">|</span>
           <a href="#projects">Projects</a>
-          <span class="nav-sep">·</span>
+          <span class="nav-sep">|</span>
           <a href="#work">Work</a>
-          <span class="nav-sep">·</span>
+          <span class="nav-sep">|</span>
           <a href="#education">Education</a>
-          <span class="nav-sep">·</span>
+          <span class="nav-sep">|</span>
           <a href="#contact">Contact</a>
         </nav>
       </div>
@@ -63,40 +59,34 @@
       <section id="home" class="hero">
         <div class="container">
 
-          <p class="hero-eyebrow">Based in Boston · Open to Work</p>
-          <h1 class="hero-name">Hrishikesh <em>Keswani</em></h1>
+          <h1 class="hero-name">Hrishikesh Keswani</h1>
           <p class="hero-role">Machine Learning Engineer</p>
 
-          <!-- CODE CARD -->
+          <!-- CODE CARD (like reference) -->
           <div class="code-card">
-            <div class="code-chrome">
-              <div class="code-dots">
-                <div class="code-dot red"></div>
-                <div class="code-dot yellow"></div>
-                <div class="code-dot green"></div>
-              </div>
-              <div class="code-tabs">
-                <button class="code-tab active" data-lang="python">python</button>
-                <button class="code-tab" data-lang="javascript">javascript</button>
-              </div>
+            <div class="code-tabs">
+              <button class="code-tab active" data-lang="python">Python</button>
+              <button class="code-tab" data-lang="javascript">JavaScript</button>
             </div>
 
             <div class="code-inner">
               <div class="code-header">
-                <span class="code-prompt-icon">▸</span>
+                <span class="code-prompt-icon">▢</span>
                 <span class="code-address">hk@portfolio:~$</span>
-                <span class="code-lang-hint">python3 intro.py</span>
+                <span class="code-lang-hint">&gt;&gt; python</span>
               </div>
 
-              <pre class="code-block active" id="code-python"><span class="kw">print</span>(<span class="str">"Hello, World! 👋 I'm Hrishikesh Keswani"</span>)
-<span class="kw">print</span>(<span class="str">"Current status: MS Data Analytics Engineering @ Northeastern University"</span>)
-<span class="kw">print</span>(<span class="str">"Summary: ML Engineer building LLM & RAG systems, distributed training"</span>)
-<span class="kw">print</span>(<span class="str">"         pipelines, and production-grade ML platforms."</span>)<span class="code-cursor"></span></pre>
+              <pre class="code-block active" id="code-python">
+&gt;&gt; print("Hello, World! 👋 I'm Hrishikesh Keswani")
+&gt;&gt; print("Current status: MS Data Analytics Engineering @ Northeastern University")
+&gt;&gt; print("Summary: ML Engineer building LLM & RAG systems, distributed training pipelines, and 
+            production-grade ML platforms across healthcare & fintech.")</pre>
 
-              <pre class="code-block" id="code-javascript"><span class="kw">const</span> <span class="var">name</span>      <span class="op">=</span> <span class="str">"Hrishikesh Keswani"</span>;
-<span class="kw">const</span> <span class="var">role</span>      <span class="op">=</span> <span class="str">"Machine Learning Engineer"</span>;
-<span class="kw">const</span> <span class="var">interests</span> <span class="op">=</span> [<span class="str">"LLMs"</span>, <span class="str">"RAG"</span>, <span class="str">"MLOps"</span>, <span class="str">"Distributed Training"</span>, <span class="str">"Cloud-native"</span>];
-<span class="fn">deployPortfolio</span>({ <span class="var">name</span>, <span class="var">role</span>, <span class="var">interests</span> });<span class="code-cursor"></span></pre>
+              <pre class="code-block" id="code-javascript">
+&gt;&gt; const name = "Hrishikesh Keswani";
+&gt;&gt; const role = "Machine Learning Engineer";
+&gt;&gt; const interests = ["LLMs", "RAG", "MLOps", "Distributed Training","Cloud-native systems"];
+&gt;&gt; deployPortfolio({ name, role, interests });</pre>
             </div>
           </div>
 
@@ -122,7 +112,7 @@
 
           <div class="hero-buttons">
             <a href="#about" class="btn primary">About Me</a>
-            <a href="Hrishikesh_Keswani_Resume.pdf" class="btn ghost" target="_blank">Resume ↗</a>
+            <a href="Hrishikesh_Keswani_Resume.pdf" class="btn ghost" target="_blank">Resume</a>
           </div>
 
         </div>
@@ -131,20 +121,21 @@
       <!-- ABOUT -->
       <section id="about" class="section">
         <div class="container">
-          <div class="section-heading reveal">
+
+          <div class="section-heading">
             <span class="section-icon">💡</span>
             <h2>About Me</h2>
           </div>
 
-          <div class="card about-card reveal reveal-d1">
+          <div class="card about-card">
             <div class="about-body">
               <p>
-                I'm Hrishikesh Keswani, a Machine Learning Engineer based in Boston with over 2 years of experience
+                I’m Hrishikesh Keswani, a Machine Learning Engineer based in Boston with over 2 years of experience
                 building scalable AI and data-driven systems. I specialize in end-to-end machine learning pipelines,
                 with a strong focus on LLMs, Retrieval-Augmented Generation (RAG), and production ML systems.
               </p>
               <p>
-                Recently finished my Master's in Data Analytics Engineering from Northeastern University, I've worked
+                Recently finished my Master’s in Data Analytics Engineering from Northeastern University, I’ve worked
                 across industry and startup environments, including Boehringer Ingelheim, where I designed a
                 large-scale employee feedback analysis platform using Llama-3, GPT-4o, FastAPI, Ray, and Airflow,
                 processing insights from over 10,000+ responses while meeting strict performance and reliability
@@ -153,7 +144,7 @@
               <p>
                 My strengths lie at the intersection of model development and real-world deployment—from
                 fine-tuning and inference optimization to distributed training, monitoring, and cloud-native
-                deployment on AWS, Docker, and Kubernetes. Outside of work, I'm passionate about building AI
+                deployment on AWS, Docker, and Kubernetes. Outside of work, I’m passionate about building AI
                 products and experimenting with new LLM architectures.
               </p>
             </div>
@@ -162,19 +153,20 @@
               <img src="assets/img/profile_pic.png" alt="Profile image of Hrishikesh Keswani" class="about-photo">
             </div>
           </div>
+
         </div>
       </section>
 
       <!-- PROJECTS -->
       <section id="projects" class="section">
         <div class="container">
-          <div class="section-heading reveal">
+          <div class="section-heading">
             <span class="section-icon">👨‍💻</span>
             <h2>Projects</h2>
           </div>
 
           <div class="projects-grid">
-            <article class="card project-card reveal">
+            <article class="card project-card">
               <h3>Enterprise Feedback RAG</h3>
               <p>
                 10k+ employee survey responses analyzed using a scalable RAG pipeline for leadership insights with
@@ -190,7 +182,7 @@
               </div>
             </article>
 
-            <article class="card project-card reveal reveal-d1">
+            <article class="card project-card">
               <h3>FinanceHelper AI</h3>
               <p>
                 LoRA fine-tuned Mistral model with RAG to provide contextual financial advice grounded in
@@ -204,8 +196,8 @@
               </div>
             </article>
 
-            <article class="card project-card reveal reveal-d2">
-              <h3>LLM-Driven Financial Sentiment</h3>
+            <article class="card project-card">
+              <h3>LLM-Driven Financial Sentiment Analysis Tool</h3>
               <p>
                 Pipeline for scraping and analyzing financial news using NLP and sentiment models to support
                 investment decisions.
@@ -218,8 +210,8 @@
               </div>
             </article>
 
-            <article class="card project-card reveal">
-              <h3>Diabetes Readmission Prediction</h3>
+            <article class="card project-card">
+              <h3>Prediction Analysis of Diabetes Patients Readmission</h3>
               <p>
                 Machine learning models for predicting readmission risk, with emphasis on interpretability and
                 predictive performance.
@@ -231,8 +223,8 @@
               </div>
             </article>
 
-            <article class="card project-card reveal reveal-d1">
-              <h3>Aviation Safety & Flight Delays</h3>
+            <article class="card project-card">
+              <h3>Aviation Safety and Flight Delays</h3>
               <p>
                 Data analysis and visualization of flight delays and safety metrics using geospatial tools and BI dashboards.
               </p>
@@ -244,8 +236,8 @@
               </div>
             </article>
 
-            <article class="card project-card reveal reveal-d2">
-              <h3>Music Genre Classification</h3>
+            <article class="card project-card">
+              <h3>Music Genre Classification using Lyrics</h3>
               <p>
                 Deep learning NLP model to classify music genres from lyrical content.
               </p>
@@ -256,8 +248,8 @@
               </div>
             </article>
 
-            <article class="card project-card reveal">
-              <h3>Automated Financial Doc Summarization</h3>
+            <article class="card project-card">
+              <h3>Automated Financial Document Summarization</h3>
               <p>
                 Abstractive summarization of financial documents to enable quick review and decision-making.
               </p>
@@ -267,8 +259,8 @@
               </div>
             </article>
 
-            <article class="card project-card reveal reveal-d1">
-              <h3>Financial Sentiment Dataset</h3>
+            <article class="card project-card">
+              <h3>Financial Sentiment Dataset Creation</h3>
               <p>
                 Scraping and aggregation of financial news articles, building labeled datasets for downstream models.
               </p>
@@ -279,7 +271,7 @@
               </div>
             </article>
 
-            <article class="card project-card reveal reveal-d2">
+            <article class="card project-card">
               <h3>Human Activity Recognition</h3>
               <p>
                 Computer vision pipeline for classifying human activities using transfer learning on CNNs.
@@ -294,18 +286,18 @@
         </div>
       </section>
 
-      <!-- WORK EXPERIENCE -->
+      <!-- WORK EXPERIENCE (timeline style) -->
       <section id="work" class="section">
         <div class="container">
-          <div class="section-heading reveal">
+          <div class="section-heading">
             <span class="section-icon">💼</span>
             <h2>Work Experience</h2>
           </div>
 
           <div class="timeline">
-            <div class="timeline-year-pill reveal">2025</div>
+            <div class="timeline-year-pill">2025</div>
 
-            <div class="timeline-card card reveal reveal-d1">
+            <div class="timeline-card card">
               <h3>Machine Learning Engineer — Boehringer Ingelheim</h3>
               <p class="timeline-meta">Athens, Georgia, USA · January 2025 – July 2025</p>
               <p>
@@ -323,9 +315,9 @@
               </div>
             </div>
 
-            <div class="timeline-year-pill reveal">2022–2023</div>
+            <div class="timeline-year-pill">2022–2023</div>
 
-            <div class="timeline-card card reveal reveal-d1">
+            <div class="timeline-card card">
               <h3>Data Scientist — Yunometa</h3>
               <p class="timeline-meta">Mumbai, India · August 2022 – July 2023</p>
               <p>
@@ -344,9 +336,9 @@
               </div>
             </div>
 
-            <div class="timeline-year-pill reveal">2021–2022</div>
+            <div class="timeline-year-pill">2021–2022</div>
 
-            <div class="timeline-card card reveal reveal-d1">
+            <div class="timeline-card card">
               <h3>Data Scientist — Kritexco</h3>
               <p class="timeline-meta">Mumbai, India · December 2021 – March 2022</p>
               <p>
@@ -360,14 +352,14 @@
               </div>
             </div>
 
-            <div class="timeline-year-pill reveal">2021</div>
+            <div class="timeline-year-pill">2021</div>
 
-            <div class="timeline-card card reveal reveal-d1">
+            <div class="timeline-card card">
               <h3>Machine Learning Engineer — Aadyam Infotech</h3>
               <p class="timeline-meta">Pune, India · June 2021 – August 2021</p>
               <p>
-                Built an NLP pipeline with regex and Azure AI to parse unstructured documents, achieving 86%
-                extraction accuracy while collaborating in an agile environment on optimization strategies.
+                Built an NLP pipeline with regex and Azure AI to parse unstructured documents, achieving 86% extraction
+                accuracy while collaborating in an agile environment on optimization strategies.
               </p>
               <div class="tag-list">
                 <span class="tag">NLP</span>
@@ -382,15 +374,15 @@
       <!-- EDUCATION -->
       <section id="education" class="section">
         <div class="container">
-          <div class="section-heading reveal">
+          <div class="section-heading">
             <span class="section-icon">🎓</span>
             <h2>Education</h2>
           </div>
 
           <div class="timeline">
-            <div class="timeline-year-pill reveal">2023–2025</div>
+            <div class="timeline-year-pill">2023–2025</div>
 
-            <div class="timeline-card card reveal reveal-d1">
+            <div class="timeline-card card">
               <h3>Master of Science in Data Analytics Engineering</h3>
               <p class="timeline-meta">Northeastern University · Boston, MA · December 2025</p>
               <p>
@@ -406,12 +398,12 @@
       <!-- CONTACT -->
       <section id="contact" class="section">
         <div class="container">
-          <div class="section-heading reveal">
+          <div class="section-heading">
             <span class="section-icon">📬</span>
             <h2>Contact</h2>
           </div>
 
-          <div class="card contact-card reveal reveal-d1">
+          <div class="card contact-card">
             <div class="contact-left">
               <p>
                 Open to Machine Learning Engineer, MLE II, and Applied Scientist roles. Best fit for teams working on
@@ -421,20 +413,20 @@
               <div class="contact-item">
                 <span class="contact-label">Personal</span>
                 <span id="email-personal">keswani.hrishikesh7@gmail.com</span>
-                <button class="copy-btn" data-copy="email-personal">copy</button>
+                <button class="copy-btn" data-copy="email-personal">📋</button>
               </div>
 
               <div class="contact-item">
                 <span class="contact-label">Academic</span>
                 <span id="email-edu">keswani.h@northeastern.edu</span>
-                <button class="copy-btn" data-copy="email-edu">copy</button>
+                <button class="copy-btn" data-copy="email-edu">📋</button>
               </div>
 
               <div class="contact-socials">
-                <a href="https://www.linkedin.com/in/hrishikesh-keswani-0291b6181/" target="_blank" rel="noopener" aria-label="LinkedIn">
+                <a href="https://www.linkedin.com/in/hrishikesh-keswani-0291b6181/" target="_blank" rel="noopener">
                   <img src="assets/img/linkedin.svg" alt="LinkedIn" />
                 </a>
-                <a href="https://github.com/heroiclunatic77" target="_blank" rel="noopener" aria-label="GitHub">
+                <a href="https://github.com/heroiclunatic77" target="_blank" rel="noopener">
                   <img src="assets/img/github.svg" alt="GitHub" />
                 </a>
               </div>
@@ -453,19 +445,8 @@
 
     </main>
 
-    <!-- FOOTER -->
-    <footer class="footer">
-      <div class="container footer-inner">
-        <p>© 2025 Hrishikesh Keswani · Designed & built with care</p>
-        <div class="status-badge">
-          <div class="status-dot"></div>
-          Open to work
-        </div>
-      </div>
-    </footer>
-
-  </div><!-- /content -->
-</div><!-- /page-layout -->
+  </div> <!-- /content -->
+</div> <!-- /page-layout -->
 
 <script src="js/main.js"></script>
 </body>
