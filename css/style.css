@@ -111,7 +111,7 @@ body{
   display:flex;
   align-items:center;
   justify-content:space-between;
-  height:64px;
+  height:56px; /* was 64px */
 }
 
 .logo{
@@ -134,48 +134,48 @@ nav a:hover{
   color:#d1d5db;
 }
 
-/* HERO */
+/* ── HERO (tightened to fit above the fold) ── */
 
 .hero{
-  padding:64px 0 40px;
+  padding:20px 0 16px; /* was 64px top / 40px bottom */
 }
 
 .hero-name{
   font-family:"SF Mono",ui-monospace,Menlo,Consolas,monospace;
-  font-size:40px;
+  font-size:34px; /* was 40px */
   text-align:center;
   margin:0;
 }
 
 .hero-role{
   text-align:center;
-  font-size:18px;
+  font-size:15px; /* was 18px */
   color:var(--muted);
-  margin:6px 0 28px;
+  margin:4px 0 14px; /* was 6px 0 28px */
 }
 
 /* CODE CARD */
 
 .code-card{
   max-width:960px;
-  margin:0 auto 24px;
+  margin:0 auto 12px; /* was 24px */
   background:var(--card);
-  border-radius:16px;
+  border-radius:14px;
   border:1px solid #e5e7eb;
-  box-shadow:0 10px 30px rgba(15,23,42,0.08);
+  box-shadow:0 8px 24px rgba(15,23,42,0.07);
 }
 
 .code-tabs{
   display:flex;
   gap:4px;
-  padding:8px 10px 4px;
+  padding:6px 10px 3px; /* was 8px 10px 4px */
 }
 
 .code-tab{
   border:none;
   border-radius:8px 8px 0 0;
-  padding:6px 12px;
-  font-size:13px;
+  padding:5px 12px; /* was 6px 12px */
+  font-size:12px; /* was 13px */
   cursor:pointer;
   background:transparent;
   font-family:"SF Mono",ui-monospace,Menlo,Consolas,monospace;
@@ -188,17 +188,18 @@ nav a:hover{
 
 .code-inner{
   border-top:1px solid #e5e7eb;
-  padding:10px 14px 12px;
+  padding:8px 14px 10px; /* was 10px 14px 12px */
   font-family:"SF Mono",ui-monospace,Menlo,Consolas,monospace;
-  font-size:13px;
+  font-size:12px; /* was 13px */
   background:#f9fafb;
+  border-radius:0 0 14px 14px;
 }
 
 .code-header{
   display:flex;
   align-items:center;
   gap:6px;
-  margin-bottom:6px;
+  margin-bottom:4px; /* was 6px */
   color:var(--muted);
 }
 
@@ -217,7 +218,7 @@ nav a:hover{
 .code-block{
   margin:0;
   color:#4b5563;
-  line-height:1.6;
+  line-height:1.5; /* was 1.6 */
   white-space:pre-wrap;
   display:none;
 }
@@ -226,23 +227,25 @@ nav a:hover{
   display:block;
 }
 
-/* HERO SKILL GRID */
+/* HERO SKILL GRID — single scrolling row */
 
 .skills-grid-hero{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
-  gap:10px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px; /* was grid with 10px gap */
   max-width:960px;
-  margin:0 auto 22px;
+  margin:0 auto 12px; /* was 22px */
+  justify-content:center;
 }
 
 .skill-tile{
   background:#f3f4f6;
-  border-radius:14px;
-  padding:10px 12px;
+  border-radius:999px; /* pill shape instead of 14px square */
+  padding:5px 12px; /* was 10px 12px */
   text-align:center;
-  font-size:13px;
+  font-size:12px; /* was 13px */
   border:1px solid #e5e7eb;
+  white-space:nowrap;
 }
 
 /* HERO BUTTONS */
@@ -251,13 +254,13 @@ nav a:hover{
   display:flex;
   justify-content:center;
   gap:12px;
-  margin-bottom:8px;
+  margin-bottom:0; /* was 8px */
 }
 
 .btn{
   border-radius:999px;
-  padding:8px 16px;
-  font-size:14px;
+  padding:7px 16px; /* was 8px 16px */
+  font-size:13px; /* was 14px */
   border:1px solid #111827;
   cursor:pointer;
   text-decoration:none;
