@@ -134,146 +134,114 @@ nav a:hover{
   color:#d1d5db;
 }
 
-/* ── HERO (tightened to fit above the fold) ── */
+/* ── HERO ── */
 
 .hero{
-  padding:20px 0 16px; /* was 64px top / 40px bottom */
+  min-height:calc(100vh - 56px);
+  display:flex;
+  align-items:center;
+  padding:60px 0;
+}
+
+.hero-inner{
+  display:grid;
+  grid-template-columns:1fr auto;
+  align-items:center;
+  gap:40px;
+}
+
+.hero-subtitle{
+  font-family:"SF Mono",ui-monospace,Menlo,Consolas,monospace;
+  font-size:13px;
+  color:var(--muted);
+  margin:0 0 16px;
+  letter-spacing:0.04em;
 }
 
 .hero-name{
-  font-family:"SF Mono",ui-monospace,Menlo,Consolas,monospace;
-  font-size:34px; /* was 40px */
-  text-align:center;
-  margin:0;
+  font-size:clamp(64px, 9vw, 120px);
+  font-weight:800;
+  line-height:0.92;
+  letter-spacing:-2px;
+  margin:0 0 12px;
+  text-align:left;
 }
 
-.hero-role{
-  text-align:center;
-  font-size:15px; /* was 18px */
+.hero-name .line2{
+  color:#6B7A3A;
+}
+
+.hero-tagline{
+  font-size:15px;
   color:var(--muted);
-  margin:4px 0 14px; /* was 6px 0 28px */
+  line-height:1.7;
+  max-width:420px;
+  margin:0 0 36px;
 }
 
-/* CODE CARD */
-
-.code-card{
-  max-width:960px;
-  margin:0 auto 12px; /* was 24px */
-  background:var(--card);
-  border-radius:14px;
-  border:1px solid #e5e7eb;
-  box-shadow:0 8px 24px rgba(15,23,42,0.07);
-}
-
-.code-tabs{
-  display:flex;
-  gap:4px;
-  padding:6px 10px 3px; /* was 8px 10px 4px */
-}
-
-.code-tab{
-  border:none;
-  border-radius:8px 8px 0 0;
-  padding:5px 12px; /* was 6px 12px */
-  font-size:12px; /* was 13px */
-  cursor:pointer;
-  background:transparent;
-  font-family:"SF Mono",ui-monospace,Menlo,Consolas,monospace;
-}
-
-.code-tab.active{
-  background:#111827;
-  color:#f9fafb;
-}
-
-.code-inner{
-  border-top:1px solid #e5e7eb;
-  padding:8px 14px 10px; /* was 10px 14px 12px */
-  font-family:"SF Mono",ui-monospace,Menlo,Consolas,monospace;
-  font-size:12px; /* was 13px */
-  background:#f9fafb;
-  border-radius:0 0 14px 14px;
-}
-
-.code-header{
+.hero-actions{
   display:flex;
   align-items:center;
-  gap:6px;
-  margin-bottom:4px; /* was 6px */
-  color:var(--muted);
-}
-
-.code-prompt-icon{
-  font-size:10px;
-}
-
-.code-address{
-  font-weight:500;
-}
-
-.code-lang-hint{
-  font-size:11px;
-}
-
-.code-block{
-  margin:0;
-  color:#4b5563;
-  line-height:1.5; /* was 1.6 */
-  white-space:pre-wrap;
-  display:none;
-}
-
-.code-block.active{
-  display:block;
-}
-
-/* HERO SKILL GRID — single scrolling row */
-
-.skills-grid-hero{
-  display:flex;
-  flex-wrap:wrap;
-  gap:6px; /* was grid with 10px gap */
-  max-width:960px;
-  margin:0 auto 12px; /* was 22px */
-  justify-content:center;
-}
-
-.skill-tile{
-  background:#f3f4f6;
-  border-radius:999px; /* pill shape instead of 14px square */
-  padding:5px 12px; /* was 10px 12px */
-  text-align:center;
-  font-size:12px; /* was 13px */
-  border:1px solid #e5e7eb;
-  white-space:nowrap;
-}
-
-/* HERO BUTTONS */
-
-.hero-buttons{
-  display:flex;
-  justify-content:center;
   gap:12px;
-  margin-bottom:0; /* was 8px */
+}
+
+.icon-btn{
+  width:48px;
+  height:48px;
+  border-radius:50%;
+  background:#fff;
+  border:1.5px solid #e5e7eb;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  transition:all 0.2s;
+  text-decoration:none;
+  color:var(--text);
+}
+.icon-btn:hover{
+  background:#111827;
+  border-color:#111827;
+  color:#fff;
+}
+.icon-btn svg{
+  width:18px;
+  height:18px;
 }
 
 .btn{
   border-radius:999px;
-  padding:7px 16px; /* was 8px 16px */
-  font-size:13px; /* was 14px */
-  border:1px solid #111827;
+  padding:12px 24px;
+  font-size:14px;
+  font-weight:600;
+  border:1.5px solid #111827;
   cursor:pointer;
   text-decoration:none;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  transition:all 0.2s;
 }
 
 .btn.primary{
   background:#111827;
   color:#f9fafb;
 }
+.btn.primary:hover{
+  background:#374151;
+}
 
 .btn.ghost{
   background:#f9fafb;
   color:#111827;
+}
+
+/* hide old hero elements */
+.hero-role,
+.code-card,
+.skills-grid-hero,
+.hero-buttons{
+  display:none;
 }
 
 /* GENERIC SECTION STYLES */
