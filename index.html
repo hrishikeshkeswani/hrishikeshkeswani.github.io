@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HK. — Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #1a1a2e;
+      --bg2: #16162a;
+      --surface: #1f1f38;
+      --border: rgba(255,255,255,0.08);
+      --text: #e8e6f0;
+      --muted: #6b6a80;
+      --accent: #f0a070;
+      --accent2: #e8956a;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Syne', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 48px;
+      height: 64px;
+      background: rgba(26,26,46,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-size: 1.2rem; font-weight: 800; letter-spacing: -0.02em;
+      color: var(--text); text-decoration: none;
+    }
+    .nav-links {
+      display: flex; gap: 36px; list-style: none;
+    }
+    .nav-links a {
+      font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--muted);
+      text-decoration: none; transition: color 0.2s;
+      position: relative;
+    }
+    .nav-links a:hover, .nav-links a.active { color: var(--text); }
+    .nav-links a.active::after {
+      content: ''; position: absolute; bottom: -4px; left: 0; right: 0;
+      height: 1px; background: var(--text);
+    }
+    .nav-cta {
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--text);
+      border: 1px solid var(--border); padding: 10px 22px;
+      text-decoration: none; transition: border-color 0.2s, color 0.2s;
+    }
+    .nav-cta:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* ── HERO ── */
+    #about {
+      min-height: 100vh; padding: 140px 48px 80px;
+      display: grid; grid-template-columns: 1fr 1fr;
+      align-items: center; gap: 40px;
+      position: relative; overflow: hidden;
+    }
+    .hero-left { max-width: 640px; }
+    .availability {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 28px;
+    }
+    .availability-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--accent); animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%,100% { opacity: 1; } 50% { opacity: 0.4; }
+    }
+    .hero-name {
+      font-size: clamp(4rem, 8vw, 7rem);
+      font-weight: 800; line-height: 1;
+      letter-spacing: -0.03em;
+      margin-bottom: 0;
+    }
+    .hero-name .last {
+      font-family: 'Instrument Serif', serif;
+      font-style: italic; font-weight: 400;
+      color: var(--accent); display: block;
+    }
+    .hero-title {
+      font-family: 'Instrument Serif', serif;
+      font-style: italic; font-size: 1.5rem;
+      color: var(--muted); margin: 20px 0 24px;
+    }
+    .hero-bio {
+      font-size: 0.95rem; line-height: 1.75;
+      color: #9997b0; max-width: 500px; margin-bottom: 40px;
+    }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: var(--accent); color: #1a1a2e;
+      font-size: 0.72rem; font-weight: 800; letter-spacing: 0.1em;
+      text-transform: uppercase; padding: 16px 28px;
+      text-decoration: none; transition: background 0.2s, transform 0.2s;
+    }
+    .btn-primary:hover { background: var(--accent2); transform: translateY(-1px); }
+    .btn-primary svg { width: 14px; height: 14px; }
+
+    /* constellation / info cards */
+    .hero-right {
+      position: relative; height: 500px;
+    }
+    canvas#constellation {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+    }
+    .info-card {
+      position: absolute; background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 12px 18px; min-width: 140px;
+      animation: floatCard 4s ease-in-out infinite;
+    }
+    .info-card .label {
+      font-size: 0.6rem; font-weight: 700; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--muted); margin-bottom: 4px;
+    }
+    .info-card .value {
+      font-size: 0.95rem; font-weight: 700; color: var(--text);
+    }
+    .card-currently { top: 8%; right: 12%; animation-delay: 0s; }
+    .card-stack     { top: 38%; right: 4%;  animation-delay: 1s; }
+    .card-location  { top: 60%; right: 26%; animation-delay: 2s; }
+    .card-available { bottom: 8%; right: 6%; animation-delay: 1.5s; }
+
+    @keyframes floatCard {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-6px); }
+    }
+
+    /* ── TICKER ── */
+    .ticker-wrap {
+      overflow: hidden; border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background: var(--bg2); padding: 18px 0;
+    }
+    .ticker-track {
+      display: flex; gap: 0;
+      animation: ticker 22s linear infinite;
+      white-space: nowrap;
+    }
+    .ticker-track:hover { animation-play-state: paused; }
+    .ticker-item {
+      display: inline-flex; align-items: center; gap: 16px;
+      font-size: 1.05rem; font-weight: 600; color: var(--muted);
+      padding: 0 32px;
+    }
+    .ticker-item .dot { color: var(--accent); font-size: 0.6rem; }
+    @keyframes ticker {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    /* ── ABOUT ── */
+    #about-section {
+      padding: 120px 48px;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 80px; align-items: center;
+    }
+    .section-tag {
+      font-size: 0.78rem; font-weight: 700; letter-spacing: 0.1em;
+      color: var(--accent); margin-bottom: 20px;
+    }
+    .section-tag span { color: var(--muted); margin-right: 6px; }
+    .section-headline {
+      font-size: clamp(2.2rem, 4vw, 3.2rem);
+      font-weight: 800; line-height: 1.1; letter-spacing: -0.02em;
+      margin-bottom: 20px;
+    }
+    .section-headline em {
+      font-family: 'Instrument Serif', serif;
+      font-style: italic; font-weight: 400; color: var(--accent);
+    }
+    .section-body {
+      font-size: 0.95rem; line-height: 1.8; color: #9997b0;
+    }
+
+    /* terminal card */
+    .terminal {
+      background: #12121f; border: 1px solid var(--border);
+      border-radius: 8px; overflow: hidden;
+    }
+    .terminal-bar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 16px;
+      background: #0e0e1c; border-bottom: 1px solid var(--border);
+    }
+    .terminal-dots { display: flex; gap: 6px; }
+    .terminal-dots span {
+      width: 12px; height: 12px; border-radius: 50%;
+    }
+    .terminal-dots span:nth-child(1) { background: #ff5f57; }
+    .terminal-dots span:nth-child(2) { background: #febc2e; }
+    .terminal-dots span:nth-child(3) { background: #28c840; }
+    .terminal-path {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem; color: var(--muted);
+    }
+    .terminal-body {
+      padding: 24px; font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem; line-height: 1.8;
+    }
+    .t-prompt { color: var(--accent); }
+    .t-cmd    { color: var(--text); }
+    .t-brace  { color: var(--text); }
+    .t-key    { color: #7ec8e3; }
+    .t-str    { color: #f0a070; }
+    .t-arr    { color: #a8e6cf; }
+
+    /* ── EXPERIENCE ── */
+    #experience { padding: 120px 48px; }
+    .exp-list { margin-top: 60px; }
+    .exp-item {
+      display: grid; grid-template-columns: 160px 1fr auto;
+      gap: 40px; padding: 36px 0;
+      border-top: 1px solid var(--border);
+      align-items: start;
+      transition: background 0.2s;
+    }
+    .exp-item:last-child { border-bottom: 1px solid var(--border); }
+    .exp-date { font-size: 0.82rem; color: var(--muted); padding-top: 6px; }
+    .exp-title {
+      font-size: 1.4rem; font-weight: 700; letter-spacing: -0.01em;
+      margin-bottom: 6px;
+    }
+    .exp-company {
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 12px;
+    }
+    .exp-desc { font-size: 0.9rem; color: #9997b0; line-height: 1.7; max-width: 680px; }
+    .exp-tag {
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em;
+      text-transform: uppercase; color: var(--text);
+      border: 1px solid var(--border); padding: 5px 12px;
+      white-space: nowrap; margin-top: 6px;
+    }
+
+    /* ── CONTACT ── */
+    #contact {
+      padding: 120px 48px 80px;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 80px; align-items: start;
+    }
+    .contact-email {
+      font-family: 'Instrument Serif', serif;
+      font-style: italic; font-size: 1.4rem;
+      color: var(--accent); text-decoration: none;
+      display: block; margin-top: 32px; padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+      transition: color 0.2s;
+    }
+    .contact-email:hover { color: var(--accent2); }
+    .social-list { display: flex; flex-direction: column; gap: 0; margin-top: 8px; }
+    .social-item {
+      display: flex; flex-direction: column;
+      padding: 20px 0; border-bottom: 1px solid var(--border);
+      text-decoration: none; transition: color 0.2s;
+      color: var(--text);
+    }
+    .social-item:first-child { border-top: 1px solid var(--border); }
+    .social-item:hover .social-name { color: var(--accent); }
+    .social-name { font-size: 1.1rem; font-weight: 700; margin-bottom: 3px; }
+    .social-handle { font-size: 0.78rem; color: var(--muted); }
+
+    /* ── FOOTER ── */
+    footer {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 48px;
+      border-top: 1px solid var(--border);
+      background: var(--bg2);
+    }
+    .footer-logo { font-size: 1rem; font-weight: 800; color: var(--text); }
+    .footer-credit {
+      font-family: 'Instrument Serif', serif;
+      font-style: italic; font-size: 0.88rem; color: var(--muted);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .footer-credit .star { color: var(--accent); }
+    .footer-location { font-size: 0.75rem; color: var(--muted); letter-spacing: 0.05em; }
+
+    /* ── SCROLL INDICATOR ── */
+    .scroll-dot {
+      width: 36px; height: 36px; border-radius: 50%;
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      margin: 40px auto 0; cursor: pointer;
+    }
+    .scroll-dot::after {
+      content: ''; width: 7px; height: 7px; border-radius: 50%;
+      background: var(--accent);
+    }
+
+    /* responsive */
+    @media (max-width: 900px) {
+      #about, #about-section, #contact {
+        grid-template-columns: 1fr; padding: 100px 24px 60px;
+      }
+      nav { padding: 0 24px; }
+      .nav-links { display: none; }
+      .hero-right { display: none; }
+      #experience { padding: 80px 24px; }
+      .exp-item { grid-template-columns: 1fr; gap: 8px; }
+      footer { padding: 20px 24px; flex-direction: column; gap: 12px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#about" class="nav-logo">HK.</a>
+  <ul class="nav-links">
+    <li><a href="#about" class="active">About</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#projects">Blog</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">Let's Talk</a>
+</nav>
+
+<!-- HERO -->
+<section id="about">
+  <div class="hero-left">
+    <div class="availability">
+      <span class="availability-dot"></span>
+      Available for Opportunities, 2026
+    </div>
+    <h1 class="hero-name">
+      Hrishikesh
+      <span class="last">Keswani.</span>
+    </h1>
+    <p class="hero-title">Machine Learning Engineer &amp; Data Scientist</p>
+    <p class="hero-bio">
+      MS in Data Analytics Engineering at Northeastern. I build scalable ML systems — from RAG pipelines
+      and LLM inference optimization to distributed training frameworks and event-driven cloud architectures.
+      I ship production-grade AI that actually works.
+    </p>
+    <a href="#projects" class="btn-primary">
+      View My Work
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path d="M7 17L17 7M17 7H7M17 7v10"/>
+      </svg>
+    </a>
+  </div>
+
+  <div class="hero-right">
+    <canvas id="constellation"></canvas>
+    <div class="info-card card-currently">
+      <div class="label">Currently</div>
+      <div class="value">@ Northeastern</div>
+    </div>
+    <div class="info-card card-stack">
+      <div class="label">Stack</div>
+      <div class="value">PyTorch + AWS</div>
+    </div>
+    <div class="info-card card-location">
+      <div class="label">Location</div>
+      <div class="value">Boston, MA</div>
+    </div>
+    <div class="info-card card-available">
+      <div class="label">Available</div>
+      <div class="value">Full-time</div>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker-track">
+    <!-- duplicated for seamless loop -->
+    <span class="ticker-item">PyTorch <span class="dot">✦</span></span>
+    <span class="ticker-item">LangChain <span class="dot">✦</span></span>
+    <span class="ticker-item">vLLM <span class="dot">✦</span></span>
+    <span class="ticker-item">AWS <span class="dot">✦</span></span>
+    <span class="ticker-item">Kubernetes <span class="dot">✦</span></span>
+    <span class="ticker-item">FastAPI <span class="dot">✦</span></span>
+    <span class="ticker-item">FAISS <span class="dot">✦</span></span>
+    <span class="ticker-item">PostgreSQL <span class="dot">✦</span></span>
+    <span class="ticker-item">Docker <span class="dot">✦</span></span>
+    <span class="ticker-item">Ray <span class="dot">✦</span></span>
+    <span class="ticker-item">HuggingFace <span class="dot">✦</span></span>
+    <span class="ticker-item">DeepSpeed <span class="dot">✦</span></span>
+    <span class="ticker-item">PyTorch <span class="dot">✦</span></span>
+    <span class="ticker-item">LangChain <span class="dot">✦</span></span>
+    <span class="ticker-item">vLLM <span class="dot">✦</span></span>
+    <span class="ticker-item">AWS <span class="dot">✦</span></span>
+    <span class="ticker-item">Kubernetes <span class="dot">✦</span></span>
+    <span class="ticker-item">FastAPI <span class="dot">✦</span></span>
+    <span class="ticker-item">FAISS <span class="dot">✦</span></span>
+    <span class="ticker-item">PostgreSQL <span class="dot">✦</span></span>
+    <span class="ticker-item">Docker <span class="dot">✦</span></span>
+    <span class="ticker-item">Ray <span class="dot">✦</span></span>
+    <span class="ticker-item">HuggingFace <span class="dot">✦</span></span>
+    <span class="ticker-item">DeepSpeed <span class="dot">✦</span></span>
+  </div>
+</div>
+
+<!-- ABOUT SECTION -->
+<section id="about-section">
+  <div>
+    <p class="section-tag"><span>//</span> About me</p>
+    <h2 class="section-headline">
+      Turning data<br>into <em>intelligent</em><br>systems.
+    </h2>
+    <p class="section-body">
+      I'm an ML engineer who thrives at the intersection of research and production. I've built RAG pipelines,
+      optimized LLM inference at scale, and shipped distributed training frameworks. I care about clean
+      abstractions, reproducible experiments, and systems that hold up under real load.
+    </p>
+  </div>
+  <div class="terminal">
+    <div class="terminal-bar">
+      <div class="terminal-dots">
+        <span></span><span></span><span></span>
+      </div>
+      <div class="terminal-path">~/hrishikesh - zsh</div>
+    </div>
+    <div class="terminal-body">
+      <div><span class="t-prompt">›</span> <span class="t-cmd">cat profile.json</span></div>
+      <div class="t-brace">{</div>
+      <div>&nbsp;&nbsp;<span class="t-key">"name"</span>: <span class="t-str">"Hrishikesh Keswani"</span>,</div>
+      <div>&nbsp;&nbsp;<span class="t-key">"role"</span>: <span class="t-str">"Machine Learning Engineer"</span>,</div>
+      <div>&nbsp;&nbsp;<span class="t-key">"location"</span>: <span class="t-str">"Boston, MA"</span>,</div>
+      <div>&nbsp;&nbsp;<span class="t-key">"stack"</span>: <span class="t-arr">["PyTorch", "LangChain", "AWS", "vLLM"]</span>,</div>
+      <div>&nbsp;&nbsp;<span class="t-key">"open_to"</span>: <span class="t-str">"FAANG &amp; great AI startups"</span>,</div>
+      <div>&nbsp;&nbsp;<span class="t-key">"status"</span>: <span class="t-str">"building..."</span>,</div>
+      <div class="t-brace">}</div>
+      <div><span class="t-prompt">›</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <p class="section-tag"><span>//</span> Experience</p>
+  <h2 class="section-headline">Where I've <em>worked.</em></h2>
+
+  <div class="exp-list">
+    <div class="exp-item">
+      <div class="exp-date">Jan 2025 – July 2025</div>
+      <div>
+        <div class="exp-title">Machine Learning Engineer</div>
+        <div class="exp-company">Boehringer Ingelheim · Athens, GA</div>
+        <div class="exp-desc">
+          Built a scalable RAG system with Llama-3, GPT-4o, and Nova Lite to analyze 10K+ surveys,
+          driving leadership insights. Increased LLM inference throughput from 1.2K to 2.0K tokens/sec
+          using vLLM batching and multi-GPU Ray. Deployed monitoring with Grafana and Prometheus,
+          optimizing p95 latency and GPU utilization.
+        </div>
+      </div>
+      <div class="exp-tag">Pharma</div>
+    </div>
+
+    <div class="exp-item">
+      <div class="exp-date">Aug 2022 – July 2023</div>
+      <div>
+        <div class="exp-title">Data Scientist</div>
+        <div class="exp-company">Yunometa · Mumbai, India</div>
+        <div class="exp-desc">
+          Developed a multilingual document text detection model using Faster R-CNN (ResNet-50) in PyTorch,
+          improving extraction recall by 30%. Architected an event-driven AWS pipeline (S3, Lambda, SageMaker)
+          for PDF ingestion and scalable inference.
+        </div>
+      </div>
+      <div class="exp-tag">ML</div>
+    </div>
+
+    <div class="exp-item">
+      <div class="exp-date">Dec 2021 – Mar 2022</div>
+      <div>
+        <div class="exp-title">Data Scientist</div>
+        <div class="exp-company">Kritexco · Mumbai, India</div>
+        <div class="exp-desc">
+          Analyzed 50K+ NFT marketplace transactions to detect fraud. Built fraud detection models
+          using Logistic Regression and Random Forest, achieving PR-AUC of 0.82 and recall of 0.78
+          on highly imbalanced data using SMOTE.
+        </div>
+      </div>
+      <div class="exp-tag">Fintech</div>
+    </div>
+
+    <div class="exp-item">
+      <div class="exp-date">June 2021 – Aug 2021</div>
+      <div>
+        <div class="exp-title">Machine Learning Engineer</div>
+        <div class="exp-company">Aadyam Infotech · Pune, India</div>
+        <div class="exp-desc">
+          Engineered an NLP pipeline leveraging Azure AI and regex to parse and extract key information
+          from unstructured documents, achieving 86% accuracy on extracted records.
+        </div>
+      </div>
+      <div class="exp-tag">NLP</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div>
+    <p class="section-tag"><span>//</span> Contact</p>
+    <h2 class="section-headline">
+      Let's build<br>something <em>great.</em>
+    </h2>
+    <p class="section-body">
+      I'm always open to interesting conversations, new opportunities, and collaborations.
+      If you have a project in mind or just want to say hello, email me below.
+    </p>
+    <a href="mailto:keswani.hrishikesh7@gmail.com" class="contact-email">
+      keswani.hrishikesh7@gmail.com
+    </a>
+    <div class="scroll-dot"></div>
+  </div>
+  <div>
+    <div class="social-list">
+      <a href="https://github.com/heroiclunatic77" target="_blank" class="social-item">
+        <span class="social-name">GitHub</span>
+        <span class="social-handle">@heroiclunatic77</span>
+      </a>
+      <a href="https://linkedin.com/in/hrishikeshkeswani" target="_blank" class="social-item">
+        <span class="social-name">LinkedIn</span>
+        <span class="social-handle">/in/hrishikeshkeswani</span>
+      </a>
+      <a href="tel:857-398-5289" class="social-item">
+        <span class="social-name">Phone</span>
+        <span class="social-handle">857-398-5289</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">HK.</div>
+  <div class="footer-credit">
+    Designed &amp; built by Hrishikesh Keswani <span class="star">✦</span>
+  </div>
+  <div class="footer-location">Boston, MA, 2026</div>
+  <div class="footer-location">Delhi, India, 2026</div>
+</footer>
+
+<script>
+  // ── Constellation canvas ──
+  const canvas = document.getElementById('constellation');
+  const ctx = canvas.getContext('2d');
+
+  function resize() {
+    canvas.width  = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const NODES = 28;
+  const nodes = Array.from({ length: NODES }, () => ({
+    x: Math.random(), y: Math.random(),
+    vx: (Math.random() - 0.5) * 0.0004,
+    vy: (Math.random() - 0.5) * 0.0004,
+    r: Math.random() * 1.5 + 0.5,
+  }));
+
+  const COLORS = ['#f0a070','#7ec8e3','#a8e6cf','#e8e6f0'];
+
+  function draw() {
+    const W = canvas.width, H = canvas.height;
+    ctx.clearRect(0, 0, W, H);
+
+    // update
+    nodes.forEach(n => {
+      n.x += n.vx; n.y += n.vy;
+      if (n.x < 0 || n.x > 1) n.vx *= -1;
+      if (n.y < 0 || n.y > 1) n.vy *= -1;
+    });
+
+    // edges
+    for (let i = 0; i < NODES; i++) {
+      for (let j = i + 1; j < NODES; j++) {
+        const dx = (nodes[i].x - nodes[j].x) * W;
+        const dy = (nodes[i].y - nodes[j].y) * H;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < 130) {
+          ctx.beginPath();
+          ctx.strokeStyle = `rgba(240,160,112,${(1 - dist/130) * 0.25})`;
+          ctx.lineWidth = 0.6;
+          ctx.moveTo(nodes[i].x * W, nodes[i].y * H);
+          ctx.lineTo(nodes[j].x * W, nodes[j].y * H);
+          ctx.stroke();
+        }
+      }
+    }
+
+    // dots
+    nodes.forEach((n, i) => {
+      ctx.beginPath();
+      ctx.arc(n.x * W, n.y * H, n.r, 0, Math.PI * 2);
+      ctx.fillStyle = COLORS[i % COLORS.length];
+      ctx.globalAlpha = 0.7;
+      ctx.fill();
+      ctx.globalAlpha = 1;
+    });
+
+    requestAnimationFrame(draw);
+  }
+  draw();
+
+  // ── Active nav on scroll ──
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks  = document.querySelectorAll('.nav-links a');
+  const observer  = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        navLinks.forEach(a => {
+          a.classList.toggle('active', a.getAttribute('href') === '#' + e.target.id);
+        });
+      }
+    });
+  }, { threshold: 0.4 });
+  sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
