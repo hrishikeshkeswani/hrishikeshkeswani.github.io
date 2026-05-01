@@ -375,17 +375,120 @@
       background: var(--accent);
     }
 
-    /* responsive */
+    /* ── HAMBURGER ── */
+    .hamburger {
+      display: none;
+      flex-direction: column; justify-content: center; gap: 5px;
+      width: 36px; height: 36px; cursor: pointer;
+      background: none; border: none; padding: 4px;
+    }
+    .hamburger span {
+      display: block; height: 1.5px; background: var(--text);
+      transition: transform 0.3s, opacity 0.3s;
+      transform-origin: center;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+    .mobile-menu {
+      display: none;
+      position: fixed; top: 64px; left: 0; right: 0; z-index: 99;
+      background: rgba(26,26,46,0.97); backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      flex-direction: column; padding: 24px;
+      gap: 0;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a, .mobile-menu button {
+      font-size: 0.85rem; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--muted);
+      text-decoration: none; padding: 16px 0;
+      border-bottom: 1px solid var(--border);
+      background: none; font-family: 'Syne', sans-serif;
+      cursor: pointer; text-align: left;
+      transition: color 0.2s;
+    }
+    .mobile-menu a:last-child, .mobile-menu button:last-child { border-bottom: none; }
+    .mobile-menu a:hover, .mobile-menu button:hover { color: var(--accent); }
+    .mobile-menu .mobile-resume { color: var(--accent); }
+
+    /* ── RESPONSIVE ── */
     @media (max-width: 900px) {
-      #about, #about-section, #contact {
-        grid-template-columns: 1fr; padding: 100px 24px 60px;
-      }
-      nav { padding: 0 24px; }
+      /* Nav */
+      nav { padding: 0 20px; }
       .nav-links { display: none; }
+      .nav-actions { display: none; }
+      .hamburger { display: flex; }
+
+      /* Hero */
+      #about {
+        grid-template-columns: 1fr;
+        padding: 100px 20px 60px;
+        gap: 0;
+      }
       .hero-right { display: none; }
-      #experience { padding: 80px 24px; }
-      .exp-item { grid-template-columns: 1fr; gap: 8px; }
-      footer { padding: 20px 24px; flex-direction: column; gap: 12px; text-align: center; }
+      .hero-name { font-size: clamp(3rem, 13vw, 5rem); }
+
+      /* About section */
+      #about-section {
+        grid-template-columns: 1fr;
+        padding: 80px 20px 60px;
+        gap: 48px;
+      }
+
+      /* Ticker */
+      .ticker-item { font-size: 0.9rem; padding: 0 20px; }
+
+      /* Experience */
+      #experience { padding: 80px 20px; }
+      .exp-item {
+        grid-template-columns: 1fr !important;
+        gap: 6px !important;
+      }
+      .exp-tag { margin-top: 12px; align-self: flex-start; }
+
+      /* Projects */
+      #projects { padding: 80px 20px 0 !important; }
+      a.exp-item, div.exp-item {
+        grid-template-columns: 1fr !important;
+        gap: 6px !important;
+      }
+
+      /* Contact */
+      #contact {
+        grid-template-columns: 1fr;
+        padding: 80px 20px 60px;
+        gap: 48px;
+      }
+      .contact-email { font-size: 1.1rem; }
+
+      /* Chat */
+      .chat-panel { height: 420px; }
+
+      /* Footer */
+      footer {
+        padding: 20px;
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+      }
+
+      /* Resume modal */
+      .resume-modal { width: 96vw; height: 92vh; }
+      .resume-modal-bar { flex-wrap: wrap; gap: 8px; }
+      .resume-modal-title { font-size: 0.65rem; }
+
+      /* Hide custom cursor on touch */
+      #cursorDot, #cursorRing { display: none; }
+      *, *::before, *::after { cursor: auto !important; }
+    }
+
+    @media (max-width: 480px) {
+      .hero-bio { font-size: 0.88rem; }
+      .section-headline { font-size: clamp(1.8rem, 8vw, 2.4rem); }
+      .exp-title { font-size: 1.15rem; }
+      .nav-resume, .nav-cta { padding: 8px 14px; font-size: 0.65rem; }
     }
   </style>
 </head>
@@ -404,7 +507,19 @@
     <button class="nav-resume" onclick="openResume()">View Resume</button>
     <a href="#contact" class="nav-cta">Let's Talk</a>
   </div>
+  <button class="hamburger" id="hamburger" aria-label="Menu" onclick="toggleMobileMenu()">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#about" onclick="closeMobileMenu()">About</a>
+  <a href="#projects" onclick="closeMobileMenu()">Projects</a>
+  <a href="#experience" onclick="closeMobileMenu()">Experience</a>
+  <a href="#contact" onclick="closeMobileMenu()">Contact</a>
+  <button class="mobile-resume" onclick="closeMobileMenu(); openResume();">View Resume</button>
+</div>
 
 <!-- HERO -->
 <section id="about">
@@ -831,7 +946,19 @@
   function handleOverlayClick(e) {
     if (e.target === document.getElementById('resumeOverlay')) closeResume();
   }
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeResume(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeResume(); closeMobileMenu(); } });
+
+  // ── Mobile Menu ──
+  function toggleMobileMenu() {
+    const menu = document.getElementById('mobileMenu');
+    const burger = document.getElementById('hamburger');
+    menu.classList.toggle('open');
+    burger.classList.toggle('open');
+  }
+  function closeMobileMenu() {
+    document.getElementById('mobileMenu').classList.remove('open');
+    document.getElementById('hamburger').classList.remove('open');
+  }
 
   // ── Active nav on scroll ──
   const sections = document.querySelectorAll('section[id]');
@@ -876,21 +1003,31 @@
 <script>
   const cursorDot  = document.getElementById('cursorDot');
   const cursorRing = document.getElementById('cursorRing');
-  let mx = -200, my = -200, rx = -200, ry = -200;
-  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
-  (function animateCursor() {
-    rx += (mx - rx) * 0.12;
-    ry += (my - ry) * 0.12;
-    cursorDot.style.left  = mx + 'px';
-    cursorDot.style.top   = my + 'px';
-    cursorRing.style.left = rx + 'px';
-    cursorRing.style.top  = ry + 'px';
-    requestAnimationFrame(animateCursor);
-  })();
-  document.querySelectorAll('a, button').forEach(el => {
-    el.addEventListener('mouseenter', () => cursorRing.classList.add('hovered'));
-    el.addEventListener('mouseleave', () => cursorRing.classList.remove('hovered'));
-  });
+  // Only enable custom cursor on non-touch devices
+  if (window.matchMedia('(pointer: fine)').matches) {
+    let mx = -200, my = -200, rx = -200, ry = -200;
+    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+    (function animateCursor() {
+      rx += (mx - rx) * 0.12;
+      ry += (my - ry) * 0.12;
+      cursorDot.style.left  = mx + 'px';
+      cursorDot.style.top   = my + 'px';
+      cursorRing.style.left = rx + 'px';
+      cursorRing.style.top  = ry + 'px';
+      requestAnimationFrame(animateCursor);
+    })();
+    document.querySelectorAll('a, button').forEach(el => {
+      el.addEventListener('mouseenter', () => cursorRing.classList.add('hovered'));
+      el.addEventListener('mouseleave', () => cursorRing.classList.remove('hovered'));
+    });
+  } else {
+    // Touch device — hide cursor elements and restore default cursor
+    cursorDot.style.display = 'none';
+    cursorRing.style.display = 'none';
+    const styleEl = document.createElement('style');
+    styleEl.textContent = '*, *::before, *::after { cursor: auto !important; }';
+    document.head.appendChild(styleEl);
+  }
 </script>
 </body>
 </html>
