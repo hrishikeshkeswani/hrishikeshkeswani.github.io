@@ -1053,5 +1053,320 @@
     document.head.appendChild(styleEl);
   }
 </script>
+
+<!-- ── FLOATING CHAT WIDGET ── -->
+<style>
+  .chat-launcher {
+    position: fixed; bottom: 28px; right: 28px; z-index: 500;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .chat-label {
+    background: var(--surface); border: 1px solid var(--border);
+    color: var(--text); font-size: 0.72rem; font-weight: 700;
+    letter-spacing: 0.05em; padding: 9px 15px;
+    white-space: nowrap; box-shadow: 0 4px 18px rgba(0,0,0,0.35);
+    animation: labelBob 3s ease-in-out infinite;
+    transition: opacity 0.2s, transform 0.2s;
+    pointer-events: none;
+  }
+  .chat-label.hidden { opacity: 0; transform: translateX(8px); pointer-events: none; }
+  @keyframes labelBob {
+    0%,100% { transform: translateY(0); }
+    50%      { transform: translateY(-4px); }
+  }
+  .chat-fab {
+    width: 54px; height: 54px; border-radius: 50%;
+    background: var(--accent); border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 24px rgba(240,160,112,0.4);
+    transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+    font-family: 'Syne', sans-serif; flex-shrink: 0;
+  }
+  .chat-fab:hover { background: var(--accent2); transform: scale(1.08); box-shadow: 0 6px 32px rgba(240,160,112,0.55); }
+  .chat-fab svg.icon-chat { display: block; }
+  .chat-fab svg.icon-x    { display: none; }
+  .chat-fab.open svg.icon-chat { display: none; }
+  .chat-fab.open svg.icon-x    { display: block; }
+
+  .chat-widget {
+    position: fixed; bottom: 96px; right: 28px; z-index: 499;
+    width: 370px; height: 510px;
+    background: var(--bg2); border: 1px solid var(--border);
+    display: flex; flex-direction: column;
+    box-shadow: 0 12px 56px rgba(0,0,0,0.55);
+    transform: translateY(16px) scale(0.96); opacity: 0;
+    pointer-events: none;
+    transition: transform 0.22s cubic-bezier(.4,0,.2,1), opacity 0.22s;
+    transform-origin: bottom right;
+  }
+  .chat-widget.open { transform: translateY(0) scale(1); opacity: 1; pointer-events: all; }
+
+  .chat-header {
+    display: flex; align-items: center; gap: 10px;
+    padding: 13px 16px; border-bottom: 1px solid var(--border);
+    background: var(--surface); flex-shrink: 0;
+  }
+  .chat-status-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: #28c840; animation: pulse 2s infinite; flex-shrink: 0;
+  }
+  .chat-header-text { flex: 1; }
+  .chat-header-name {
+    font-size: 0.78rem; font-weight: 700; letter-spacing: 0.04em; color: var(--text);
+  }
+  .chat-header-sub {
+    font-size: 0.62rem; font-weight: 600; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--muted);
+  }
+
+  .chat-messages {
+    flex: 1; overflow-y: auto; padding: 14px; display: flex;
+    flex-direction: column; gap: 10px;
+    scrollbar-width: thin; scrollbar-color: var(--border) transparent;
+  }
+  .chat-messages::-webkit-scrollbar { width: 3px; }
+  .chat-messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  .chat-msg {
+    max-width: 86%; padding: 9px 13px;
+    font-size: 0.83rem; line-height: 1.55; font-family: 'Syne', sans-serif;
+  }
+  .chat-msg.bot  { background: var(--surface); border: 1px solid var(--border); color: var(--text); align-self: flex-start; border-radius: 2px 8px 8px 8px; }
+  .chat-msg.user { background: var(--accent); color: #1a1a2e; font-weight: 600; align-self: flex-end; border-radius: 8px 2px 8px 8px; }
+  .chat-msg.typing { background: var(--surface); border: 1px solid var(--border); align-self: flex-start; border-radius: 2px 8px 8px 8px; padding: 11px 16px; }
+
+  .typing-dots { display: flex; gap: 4px; align-items: center; }
+  .typing-dots span { width: 5px; height: 5px; border-radius: 50%; background: var(--muted); animation: chatBounce 1.2s infinite; }
+  .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes chatBounce { 0%,60%,100% { transform: translateY(0); } 30% { transform: translateY(-5px); } }
+
+  .chat-suggestions {
+    display: flex; flex-wrap: wrap; gap: 6px;
+    padding: 0 14px 10px; flex-shrink: 0;
+  }
+  .chat-chip {
+    font-size: 0.66rem; font-weight: 700; letter-spacing: 0.05em;
+    color: var(--accent); border: 1px solid rgba(240,160,112,0.35);
+    padding: 5px 10px; background: transparent; cursor: pointer;
+    font-family: 'Syne', sans-serif;
+    transition: border-color 0.18s, background 0.18s;
+    white-space: nowrap;
+  }
+  .chat-chip:hover { border-color: var(--accent); background: rgba(240,160,112,0.07); }
+
+  .chat-input-row {
+    display: flex; align-items: flex-end; gap: 8px;
+    padding: 10px 12px; border-top: 1px solid var(--border);
+    background: var(--surface); flex-shrink: 0;
+  }
+  .chat-textarea {
+    flex: 1; background: var(--bg); border: 1px solid var(--border);
+    color: var(--text); font-family: 'Syne', sans-serif; font-size: 0.8rem;
+    padding: 8px 12px; outline: none; resize: none;
+    transition: border-color 0.18s; max-height: 90px; min-height: 36px;
+    line-height: 1.45; overflow-y: auto;
+  }
+  .chat-textarea:focus { border-color: var(--accent); }
+  .chat-textarea::placeholder { color: var(--muted); }
+  .chat-send-btn {
+    width: 34px; height: 34px; background: var(--accent); border: none;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; transition: background 0.18s;
+  }
+  .chat-send-btn:hover { background: var(--accent2); }
+
+  @media (max-width: 480px) {
+    .chat-launcher { bottom: 18px; right: 14px; }
+    .chat-fab { width: 50px; height: 50px; }
+    .chat-label { font-size: 0.65rem; padding: 7px 11px; }
+    .chat-widget { right: 10px; bottom: 84px; width: calc(100vw - 20px); height: 430px; }
+  }
+</style>
+
+<div class="chat-launcher">
+  <span class="chat-label" id="chatLabel">Ask anything about me</span>
+  <button class="chat-fab" id="chatFab" onclick="toggleChat()" aria-label="Chat with Hrishikesh's AI">
+    <svg class="icon-chat" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#1a1a2e" stroke-width="2.3">
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+    </svg>
+    <svg class="icon-x" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1a1a2e" stroke-width="2.5">
+      <path d="M18 6 6 18M6 6l12 12"/>
+    </svg>
+  </button>
+</div>
+
+<div class="chat-widget" id="chatWidget">
+  <div class="chat-header">
+    <span class="chat-status-dot"></span>
+    <div class="chat-header-text">
+      <div class="chat-header-name">Ask about Hrishikesh</div>
+      <div class="chat-header-sub">AI · Powered by Claude Haiku</div>
+    </div>
+  </div>
+
+  <div class="chat-messages" id="chatMessages">
+    <div class="chat-msg bot">
+      Hey! I know everything about Hrishikesh — his experience, projects, skills, and background. What would you like to know?
+    </div>
+  </div>
+
+  <div class="chat-suggestions" id="chatSuggestions">
+    <button class="chat-chip" onclick="useSuggestion(this)">Skills &amp; stack</button>
+    <button class="chat-chip" onclick="useSuggestion(this)">Work experience</button>
+    <button class="chat-chip" onclick="useSuggestion(this)">Projects</button>
+    <button class="chat-chip" onclick="useSuggestion(this)">Is he open to work?</button>
+  </div>
+
+  <div class="chat-input-row">
+    <textarea class="chat-textarea" id="chatInput" placeholder="Ask me anything…" rows="1"
+      onkeydown="onChatKey(event)" oninput="resizeChatInput(this)"></textarea>
+    <button class="chat-send-btn" onclick="sendChat()" aria-label="Send">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1a1a2e" stroke-width="2.5">
+        <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+      </svg>
+    </button>
+  </div>
+</div>
+
+<script>
+  // ── Chat configuration ──
+  const CHAT_API_KEY = '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';
+
+  const CHAT_SYSTEM = `You are an AI assistant embedded in Hrishikesh Keswani's portfolio website. Answer visitor questions about him accurately and concisely.
+
+ABOUT:
+Hrishikesh Keswani is a Machine Learning Engineer and Data Scientist based in Boston, MA.
+Education: MS in Data Analytics Engineering, Northeastern University (graduated December 2025).
+Available for full-time opportunities in 2026 — open to relocation. Targets FAANG and top AI startups.
+Contact: keswani.hrishikesh7@gmail.com | 857-398-5289
+GitHub: github.com/hrishikeshkeswani | LinkedIn: linkedin.com/in/hrishikeshkeswani
+
+SKILLS:
+ML/AI: PyTorch, HuggingFace, vLLM, DeepSpeed, LangChain, FAISS, sentence-transformers, Faster R-CNN
+Cloud/Infra: AWS (S3, Lambda, SageMaker, EC2), GCP, Kubernetes, Docker, Ray, Airflow
+Languages: Python, JavaScript
+Databases: PostgreSQL, pgvector
+MLOps: Grafana, Prometheus, ELK stack
+Frameworks: FastAPI, React, Streamlit, Azure AI
+
+EXPERIENCE:
+1. Machine Learning Engineer — Boehringer Ingelheim (Jan 2025–Jul 2025, Athens GA)
+   Built scalable RAG system (Llama-3, GPT-4o, Nova Lite) analyzing 10K+ surveys for leadership insights.
+   Increased LLM inference throughput 1.2K→2.0K tokens/sec via vLLM batching + multi-GPU Ray.
+   Deployed Grafana/Prometheus monitoring, optimizing p95 latency and GPU utilization.
+
+2. Data Scientist — Yunometa (Aug 2022–Jul 2023, Mumbai India)
+   Multilingual document text detection with Faster R-CNN (ResNet-50) in PyTorch; +30% extraction recall.
+   Built event-driven AWS pipeline (S3, Lambda, SageMaker) for PDF ingestion and scalable inference.
+
+3. Data Scientist — Kritexco (Dec 2021–Mar 2022, Mumbai India)
+   Analyzed 50K+ NFT transactions for fraud detection. Logistic Regression + Random Forest with SMOTE.
+   PR-AUC 0.82, Recall 0.78 on highly imbalanced data.
+
+4. Machine Learning Engineer — Aadyam Infotech (Jun–Aug 2021, Pune India)
+   NLP pipeline with Azure AI + regex to extract info from unstructured documents. 86% accuracy.
+
+PROJECTS:
+1. tldr. Chrome Extension — AI-powered extension that summarizes any webpage + follow-up Q&A. No account/API key needed. Live on Chrome Web Store.
+2. AI Analyst Copilot — NL→SQL pipeline (FastAPI, pgvector, Groq, React). Converts natural language to SQL, runs against PostgreSQL, generates executive insights. 80% execution accuracy on 20-query benchmark.
+3. LinkedIn Search Optimizer — RAG search engine on 124K+ LinkedIn posts (LangChain, FAISS, GCP, Kubernetes). 0.8 Recall@10. Distributed Airflow pipeline with TTL-based vector refresh.
+4. Resume RAG Chatbot — Conversational RAG chatbot (LangChain, FAISS, Streamlit). Deployed on Streamlit Cloud.
+5. Distributed ML Training Framework — Multi-GPU training with DeepSpeed ZeRO + Ray. Modular pipeline, automated hyperparameter tuning, containerized deployment.
+
+STYLE GUIDE:
+- Keep answers to 2–4 sentences unless the visitor asks for more detail.
+- Be warm, direct, and confident — mirror the portfolio's voice.
+- If asked something not in this profile, say you don't have that info and suggest contacting Hrishikesh directly at keswani.hrishikesh7@gmail.com.`;
+
+  let chatHistory = [];
+  let chatOpen = false;
+  let chatBusy = false;
+
+  function toggleChat() {
+    chatOpen = !chatOpen;
+    document.getElementById('chatWidget').classList.toggle('open', chatOpen);
+    document.getElementById('chatFab').classList.toggle('open', chatOpen);
+    document.getElementById('chatLabel').classList.toggle('hidden', chatOpen);
+    if (chatOpen) setTimeout(() => document.getElementById('chatInput').focus(), 240);
+  }
+
+  function useSuggestion(btn) {
+    document.getElementById('chatSuggestions').style.display = 'none';
+    document.getElementById('chatInput').value = btn.textContent;
+    sendChat();
+  }
+
+  function onChatKey(e) {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChat(); }
+  }
+
+  function resizeChatInput(el) {
+    el.style.height = 'auto';
+    el.style.height = Math.min(el.scrollHeight, 90) + 'px';
+  }
+
+  function appendMsg(text, role) {
+    const wrap = document.getElementById('chatMessages');
+    const d = document.createElement('div');
+    d.className = 'chat-msg ' + role;
+    d.textContent = text;
+    wrap.appendChild(d);
+    wrap.scrollTop = wrap.scrollHeight;
+    return d;
+  }
+
+  function showTyping() {
+    const wrap = document.getElementById('chatMessages');
+    const d = document.createElement('div');
+    d.className = 'chat-msg typing'; d.id = 'chatTyping';
+    d.innerHTML = '<div class="typing-dots"><span></span><span></span><span></span></div>';
+    wrap.appendChild(d); wrap.scrollTop = wrap.scrollHeight;
+  }
+  function hideTyping() { const t = document.getElementById('chatTyping'); if (t) t.remove(); }
+
+  async function sendChat() {
+    if (chatBusy) return;
+    const input = document.getElementById('chatInput');
+    const text = input.value.trim();
+    if (!text) return;
+
+    input.value = ''; input.style.height = 'auto';
+    document.getElementById('chatSuggestions').style.display = 'none';
+    appendMsg(text, 'user');
+    chatHistory.push({ role: 'user', content: text });
+    chatBusy = true; showTyping();
+
+    try {
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'x-api-key': CHAT_API_KEY,
+          'anthropic-version': '2023-06-01',
+          'anthropic-dangerous-direct-browser-access': 'true',
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: 'claude-haiku-4-5-20251001',
+          max_tokens: 450,
+          system: CHAT_SYSTEM,
+          messages: chatHistory,
+        }),
+      });
+      const data = await res.json();
+      hideTyping();
+      const reply = (data.content && data.content[0] && data.content[0].text)
+        ? data.content[0].text
+        : 'Something went wrong — please try again.';
+      appendMsg(reply, 'bot');
+      chatHistory.push({ role: 'assistant', content: reply });
+    } catch {
+      hideTyping();
+      appendMsg('Connection error. Please check your network and try again.', 'bot');
+    }
+    chatBusy = false;
+  }
+</script>
+
 </body>
 </html>
