@@ -1231,7 +1231,7 @@
 
 <script>
   // ── Chat configuration ──
-  const CHAT_API_KEY = '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';
+  const WORKER_URL = 'https://twilight-scene-98bd.keswani-hrishikesh7.workers.dev';
 
   const CHAT_SYSTEM = `You are an AI assistant embedded in Hrishikesh Keswani's portfolio website. Answer visitor questions about him accurately and concisely.
 
@@ -1338,14 +1338,9 @@ STYLE GUIDE:
     chatBusy = true; showTyping();
 
     try {
-      const res = await fetch('https://api.anthropic.com/v1/messages', {
+      const res = await fetch(WORKER_URL, {
         method: 'POST',
-        headers: {
-          'x-api-key': CHAT_API_KEY,
-          'anthropic-version': '2023-06-01',
-          'anthropic-dangerous-direct-browser-access': 'true',
-          'content-type': 'application/json',
-        },
+        headers: { 'content-type': 'application/json' },
         body: JSON.stringify({
           model: 'claude-haiku-4-5-20251001',
           max_tokens: 450,
@@ -1355,13 +1350,18 @@ STYLE GUIDE:
       });
       const data = await res.json();
       hideTyping();
-      const reply = (data.content && data.content[0] && data.content[0].text)
-        ? data.content[0].text
-        : 'Something went wrong — please try again.';
-      appendMsg(reply, 'bot');
-      chatHistory.push({ role: 'assistant', content: reply });
-    } catch {
+      if (data.content && data.content[0] && data.content[0].text) {
+        const reply = data.content[0].text;
+        appendMsg(reply, 'bot');
+        chatHistory.push({ role: 'assistant', content: reply });
+      } else {
+        const errMsg = data.error ? `${data.error.type}: ${data.error.message}` : JSON.stringify(data);
+        console.error('Claude API error:', errMsg);
+        appendMsg(`Error: ${errMsg}`, 'bot');
+      }
+    } catch (err) {
       hideTyping();
+      console.error('Chat fetch error:', err);
       appendMsg('Connection error. Please check your network and try again.', 'bot');
     }
     chatBusy = false;
